@@ -75,3 +75,10 @@ post '/users' do
 
   status 201
 end
+
+put '/users/:first_name' do |first_name|
+  user = JSON.parse(request.body.read)
+  existing = users[first_name.to_sym]
+  users[first_name.to_sym] = user
+  status existing ? 204 : 201
+end
