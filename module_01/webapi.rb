@@ -6,6 +6,10 @@ users = {
  'kevin': {first_name: 'Kevin', last_name: 'De Bruyne', age: '29' }
 }
 
+before do 
+  content_type 'application/json'
+end
+
 get '/' do
   'Karl Patrick'
 end
