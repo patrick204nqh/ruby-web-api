@@ -82,3 +82,22 @@ put '/users/:first_name' do |first_name|
   users[first_name.to_sym] = user
   status existing ? 204 : 201
 end
+
+patch '/users/:first_name' do |first_name|
+  type = accepted_media_type
+
+  user_client = JSON.parse(request.body.read)
+  user_server = users[first_name.to_sym]
+
+  user_client.each do |key, value|
+    user_server[key.to_sym] = value
+  end
+
+  if type == 'json'
+    content_type 'application/json'
+    user_server.merge(id: first_name).to_json
+  elsif type == 'xml'
+    content_type 'application/xml'
+    Gyoku.xml(first_name => user_server)
+  end
+end
