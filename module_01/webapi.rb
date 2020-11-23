@@ -43,3 +43,35 @@ get '/users' do
     Gyoku.xml(users: users)
   end
 end
+
+get '/users/:first_name' do |first_name|
+  type = accepted_media_type
+
+  if type == 'json'
+    content_type 'application/json'
+    users[first_name.to_sym].merge(id: first_name).to_json
+  elsif type == 'xml'
+    content_type 'application/xml'
+    Gyoku.xml(first_name => users[first_name.to_sym])
+  end
+end
+
+head '/users' do
+  type = accepted_media_type
+
+  if type == 'json'
+    content_type 'application/json'
+  elsif type == 'xml'
+    content_type 'application/xml'
+  end
+end
+
+post '/users' do
+  user = JSON.parse(request.body.read)
+  users[user['first_name'].downcase.to_sym] = user
+
+  url = "http://localhost:4567/users/#{user['first_name']}"
+  response.headers['Location'] = url
+
+  status 201
+end
