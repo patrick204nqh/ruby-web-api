@@ -101,3 +101,8 @@ patch '/users/:first_name' do |first_name|
     Gyoku.xml(first_name => user_server)
   end
 end
+
+delete '/users/:first_name' do |first_name|
+  users.delete(first_name.to_sym)
+  status 204
+end
