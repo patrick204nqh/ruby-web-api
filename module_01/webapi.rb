@@ -71,6 +71,12 @@ post '/users' do
                         xml: -> { { message: e.to_s } })
   end
 
+  if users[user['first_name'].downcase.to_sym]
+    message = { message: "User #{user['first_name']} already in DB." }
+    halt 409, send_data(json: -> { message },
+                        xml: -> { message })
+  end
+
   users[user['first_name'].downcase.to_sym] = user
   url = "http://localhost:4567/users/#{user['first_name']}"
   response.headers['Location'] = url
