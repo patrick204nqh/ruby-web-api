@@ -96,6 +96,8 @@ options '/users/:first_name' do
 end
 
 get '/users/:first_name' do |first_name|
+  halt 404 unless users[first_name.to_sym]
+
   send_data(json: -> { users[first_name.to_sym].merge(id: first_name) },
             xml: -> { {first_name => users[first_name.to_sym] } })
 end
