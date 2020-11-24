@@ -62,7 +62,8 @@ get '/users' do
 end
 
 post '/users' do
-  user = JSON.parse(request.body.read)
+  halt 415 unless request.env['CONTENT_TYPE'] == 'application/json'
+
   users[user['first_name'].downcase.to_sym] = user
 
   url = "http://localhost:4567/users/#{user['first_name']}"
