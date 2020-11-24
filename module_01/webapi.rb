@@ -106,3 +106,14 @@ delete '/users/:first_name' do |first_name|
   users.delete(first_name.to_sym)
   status 204
 end
+
+options '/users' do
+  response.headers['Allow'] = 'HEAD,GET,POST'
+  status 200
+end
+
+options '/users/:first_name' do
+  response.headers['Allow'] = 'GET,PUT,PATCH,DELETE'
+  status 200
+end
+
