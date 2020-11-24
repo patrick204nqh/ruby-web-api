@@ -7,6 +7,8 @@ users = {
  'kevin': {first_name: 'Kevin', last_name: 'De Bruyne', age: '29' }
 }
 
+deleted_users = {}
+
 helpers do
   def json_or_default?(type)
     ['application/json','application/*', '*/*'].include?(type.to_s)
@@ -96,6 +98,7 @@ options '/users/:first_name' do
 end
 
 get '/users/:first_name' do |first_name|
+  halt 410 if deleted_users[first_name.to_sym]
   halt 404 unless users[first_name.to_sym]
 
   send_data(json: -> { users[first_name.to_sym].merge(id: first_name) },
@@ -122,6 +125,8 @@ patch '/users/:first_name' do |first_name|
 end
 
 delete '/users/:first_name' do |first_name|
+  first_name = first_name.to_sym
+  deleted_users[first_name] = users[first_name] if users[first_name]
   users.delete(first_name.to_sym)
   status 204
 end
