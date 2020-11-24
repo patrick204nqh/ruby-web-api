@@ -64,8 +64,14 @@ end
 post '/users' do
   halt 415 unless request.env['CONTENT_TYPE'] == 'application/json'
 
-  users[user['first_name'].downcase.to_sym] = user
+  begin
+    user = JSON.parse(request.body.read)
+  rescue JSON::ParserError => e
+    halt 400, send_data(json: -> { { message: e.to_s } },
+                        xml: -> { { message: e.to_s } })
+  end
 
+  users[user['first_name'].downcase.to_sym] = user
   url = "http://localhost:4567/users/#{user['first_name']}"
   response.headers['Location'] = url
   status 201
