@@ -19,12 +19,12 @@ helpers do
   def accepted_media_type
     return 'json' unless request.accept.any?
 
-    request.accept.each do |mt|
-      return 'json' if json_or_default?(mt)
-      return 'xml' if xml?(mt)
+    request.accept.each do |type|
+      return 'json' if json_or_default?(type)
+      return 'xml' if xml?(type)
     end
 
-    halt 406, 'Not Acceptable'
+    'json'
   end
 
   def type
