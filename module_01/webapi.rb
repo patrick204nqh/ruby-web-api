@@ -70,6 +70,12 @@ post '/users' do
   status 201
 end
 
+[:put, :patch, :delete].each do |method|
+  send(method, '/users') do
+    halt 405
+  end
+end
+
 # /users/:first_name
 options '/users/:first_name' do
   response.headers['Allow'] = 'GET,PUT,PATCH,DELETE'
